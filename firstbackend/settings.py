@@ -13,10 +13,11 @@ SECRET_KEY = os.getenv("SECRET_KEY")  # Read from Render environment
 DEBUG = os.getenv("DEBUG", "False").lower() == "true"
 
 ALLOWED_HOSTS = [
-    ".onrender.com",     # allow render domain
+    "shreshta-backend.onrender.com",  # specific render domain
+    ".onrender.com",                   # allow all render subdomains
     "localhost",
     "127.0.0.1",
-] + os.getenv("ALLOWED_HOSTS", "").split(",")
+] + [host for host in os.getenv("ALLOWED_HOSTS", "").split(",") if host]
 
 # ====================
 # INSTALLED APPS
@@ -43,10 +44,7 @@ INSTALLED_APPS = [
 MIDDLEWARE = [
     "corsheaders.middleware.CorsMiddleware",
     "django.middleware.security.SecurityMiddleware",
-
-    # If you want Whitenoise on Render:
-    # "whitenoise.middleware.WhiteNoiseMiddleware",
-
+    "whitenoise.middleware.WhiteNoiseMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
     "django.middleware.common.CommonMiddleware",
     "django.middleware.csrf.CsrfViewMiddleware",
@@ -110,15 +108,15 @@ USE_TZ = True
 # =====================
 # STATIC & MEDIA FILES
 # =====================
-STATIC_URL = "/static/"
-STATIC_ROOT = os.path.join(BASE_DIR, "staticfiles")
+STATIC_URL = 'static/'
+STATIC_ROOT = BASE_DIR / 'staticfiles'
+MEDIA_URL = 'media/'
+MEDIA_ROOT = BASE_DIR / 'media'
 
-STATICFILES_DIRS = [
-    os.path.join(BASE_DIR, "static"),
-]
 
-MEDIA_URL = "/media/"
-MEDIA_ROOT = os.path.join(BASE_DIR, "media")
+STATICFILES_DIRS = []
+
+
 
 # If using whitenoise:
 # STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
@@ -127,3 +125,4 @@ MEDIA_ROOT = os.path.join(BASE_DIR, "media")
 # DEFAULT PRIMARY KEY
 # ====================
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
+STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"

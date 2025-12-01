@@ -27,7 +27,11 @@ class CustomUserAdmin(DjangoUserAdmin):
     list_display = ('username', 'email', 'phone', 'is_staff', 'is_active', 'is_superuser')
 
 # Unregister the default User admin and register our extended one
-admin.site.unregister(User)
+# Only unregister if User is already registered (safety check)
+try:
+    admin.site.unregister(User)
+except admin.sites.NotRegistered:
+    pass
 admin.site.register(User, CustomUserAdmin)
 
 # Also register UserProfile separately (optional)

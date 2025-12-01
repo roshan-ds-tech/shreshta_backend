@@ -8,8 +8,8 @@ urlpatterns = [
     path('accounts/', include('accounts.urls')),
 ]
 
-# Serve media files (uploads)
-urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
-
-# Serve static files (CSS, JS, images)
-urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
+# Serve media and static files only in development (DEBUG mode)
+# In production, WhiteNoise handles static files
+if settings.DEBUG:
+    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+    urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
